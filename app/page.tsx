@@ -375,9 +375,9 @@ export default function AccioVacLanding() {
               { icon: Wand2, title: 'AI Itinerary Builder', desc: 'Tell us your interests, budget, and dates. Our AI generates the perfect day-by-day plan instantly.', img: 'https://images.unsplash.com/photo-1517400508447-f8dd518b86db?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'emerald' },
               { icon: Shield, title: 'Geofencing Alerts', desc: 'Stay safe with real-time notifications about neighborhood safety, scams, and emergency contacts.', img: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'red' },
               { icon: CloudRain, title: 'Live Crowd & Weather', desc: 'Avoid the queues and the rain. Real-time updates help you pivot your plans on the fly.', img: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'blue' },
-              { icon: Calendar, title: 'Nearby Events', desc: 'Discover local festivals, pop-up markets, and concerts happening right now around you.', img: 'https://images.unsplash.com/photo-1533174072545-e8d4aa97edf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'purple' },
+              { icon: Calendar, title: 'Nearby Events', desc: 'Discover local festivals, pop-up markets, and concerts happening right now around you.', img: 'https://plus.unsplash.com/premium_photo-1750307451801-0b1dd8f676d2?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', color: 'purple' },
               { icon: Lightbulb, title: 'Smart Suggestions', desc: 'Hungry? We recommend authentic spots based on your taste, not just tourist traps.', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'orange' },
-              { icon: Download, title: 'Offline Mode', desc: 'No data? No problem. Access your itineraries, maps, and saved spots completely offline.', img: 'https://images.unsplash.com/photo-1621252179027-94459d27d3ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'teal' }
+              { icon: Download, title: 'Offline Mode', desc: 'No data? No problem. Access your itineraries, maps, and saved spots completely offline.', img: 'https://images.unsplash.com/photo-1627666260660-812e4684a600?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', color: 'teal' }
             ].map((feature, idx) => (
               <div key={idx} className={`group bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 reveal ${idx % 3 === 1 ? 'delay-100' : idx % 3 === 2 ? 'delay-200' : ''}`}>
                 <div className={`w-12 h-12 bg-${feature.color}-100 text-${feature.color}-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>
@@ -403,7 +403,7 @@ export default function AccioVacLanding() {
             {[
               { title: 'Solo Traveler', desc: 'Safety first features and "meet locals" mode to make solo trips social.', img: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
               { title: 'Families', desc: 'Kid-friendly filters and pace-adjusted itineraries for stress-free vacations.', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
-              { title: 'Backpackers', desc: 'Budget tracking, hostel finder, and off-the-beaten-path trails.', img: 'https://images.unsplash.com/photo-1505882662096-7c0a96996d91?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
+              { title: 'Backpackers', desc: 'Budget tracking, hostel finder, and off-the-beaten-path trails.', img: 'https://images.unsplash.com/photo-1521335751419-603f61523713?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
               { title: 'Business', desc: 'Receipt scanning, efficient routing, and leisure options for downtime.', img: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' }
             ].map((card, idx) => (
               <div key={idx} className="relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-2 transition duration-300 group">
@@ -468,12 +468,12 @@ export default function AccioVacLanding() {
                 className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
                 <img src={slide.image} alt={slide.location} className="w-full h-full object-cover brightness-75" />
-            
+                
                 {/* Location Label */}
                 <div className="absolute bottom-6 left-6 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full flex items-center gap-2">
                   <MapPin size={16} className="text-emerald-400" />
                   <span className="text-sm font-medium">{slide.location}</span>
-            </div>
+                </div>
 
                 {/* Floating Widgets for this Slide */}
                 {slide.widgets.map((widget, wIdx) => (
@@ -484,13 +484,13 @@ export default function AccioVacLanding() {
                   >
                     <div className={`${widget.isDark ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'} px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transform -translate-x-1/2`}>
                       <widget.icon size={16} className={`text-${widget.color}-500`} />
-                <div className="text-left">
+                      <div className="text-left">
                         <p className="text-xs font-bold">{widget.label}</p>
                         <p className={`text-[10px] ${widget.isDark ? 'text-gray-400' : 'text-gray-500'}`}>{widget.sub}</p>
-                </div>
-              </div>
+                      </div>
+                    </div>
                     <div className={`w-3 h-3 ${widget.isDark ? 'bg-gray-900' : 'bg-white'} transform rotate-45 mx-auto -mt-1.5`}></div>
-            </div>
+                  </div>
                 ))}
               </div>
             ))}
