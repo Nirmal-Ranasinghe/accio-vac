@@ -1,65 +1,515 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useEffect, useRef, use } from 'react';
+import { 
+  Send, Menu, ArrowRight, PlayCircle, Map, Utensils, 
+  Bus, Bell, Check, Wand2, Shield, CloudRain, 
+  Calendar, Lightbulb, Download, Twitter, Instagram, Linkedin,
+  Plane, Home, MapPin, Navigation
+} from 'lucide-react';
+
+export default function AccioVacLanding() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Handle Scroll Effect for Navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle Reveal Animation on Scroll
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="bg-gray-50 text-slate-800 font-sans antialiased overflow-x-hidden scroll-smooth">
+      <style>{`
+        .reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
+      {/* Navbar */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'h-16 shadow-md bg-white/80 backdrop-blur-md border-b border-white/30' : 'h-20 bg-white/80 backdrop-blur-md border-b border-white/30'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex justify-between items-center h-full">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-800 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
+                <Send size={16} />
+              </div>
+              <span className="font-bold text-2xl tracking-tight text-emerald-900">Accio<span className="text-emerald-500">Vac</span></span>
+            </div>
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-slate-600 hover:text-emerald-600 font-medium transition-colors">Features</a>
+              <a href="#services" className="text-slate-600 hover:text-emerald-600 font-medium transition-colors">Use Cases</a>
+              <a href="#reviews" className="text-slate-600 hover:text-emerald-600 font-medium transition-colors">Reviews</a>
+              <a href="#download" className="bg-emerald-900 text-white px-6 py-2.5 rounded-full font-medium hover:bg-emerald-800 hover:shadow-lg transition transform hover:-translate-y-0.5">
+                Get Started
+              </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center">
+              <button className="text-slate-600 hover:text-emerald-600 focus:outline-none">
+                <Menu size={24} />
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      {/* 1️⃣ Hero Section */}
+      <header className="relative w-full min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        {/* Background Image with Gradient Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=2021&q=80" 
+            alt="Travel Background" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/70 to-transparent"></div>
         </div>
-      </main>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left: Text Content */}
+          <div className="text-white space-y-8 reveal active">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-100">AI Travel Assistant V2.0</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
+              Explore Smarter. <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">Travel Better.</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-gray-300 max-w-lg leading-relaxed">
+              Your all-in-one AI-powered travel companion. Get real-time alerts, personalized itineraries, and hidden gem recommendations instantly.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <a href="#download" className="px-8 py-4 bg-emerald-500 text-white rounded-full font-bold text-lg hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)] transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                <span>Get Started Free</span>
+                <ArrowRight size={20} />
+              </a>
+              <button className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full font-semibold text-lg hover:bg-white/20 transition flex items-center justify-center gap-2">
+                <PlayCircle size={20} /> Watch Demo
+              </button>
+            </div>
+
+            <div className="pt-8 flex items-center gap-4 text-sm text-gray-400">
+              <div className="flex -space-x-2">
+                <img className="w-8 h-8 rounded-full border-2 border-gray-900" src="https://i.pravatar.cc/100?img=1" alt="User 1" />
+                <img className="w-8 h-8 rounded-full border-2 border-gray-900" src="https://i.pravatar.cc/100?img=2" alt="User 2" />
+                <img className="w-8 h-8 rounded-full border-2 border-gray-900" src="https://i.pravatar.cc/100?img=3" alt="User 3" />
+              </div>
+              <p>Trusted by 50K+ travelers worldwide</p>
+            </div>
+          </div>
+
+          {/* Right: Phone Mockup */}
+          <div className="relative hidden lg:flex justify-center lg:justify-end reveal delay-200 animate-float">
+            <div className="relative w-[300px] h-[600px] bg-gray-900 rounded-[3rem] border-4 border-gray-700 shadow-2xl overflow-hidden ring-1 ring-white/20">
+              {/* Dynamic Island */}
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1/3 h-7 bg-black rounded-b-2xl z-20"></div>
+              
+              {/* Screen Content */}
+              <div className="w-full h-full bg-gray-50 overflow-y-auto no-scrollbar relative">
+                {/* App Header */}
+                <div className="h-48 bg-cover bg-center relative" style={{backgroundImage: "url('https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60')"}}>
+                  <div className="absolute inset-0 bg-black/30"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <p className="text-xs opacity-80">Current Location</p>
+                    <h3 className="text-2xl font-bold">Kyoto, Japan</h3>
+                    <div className="flex items-center gap-1 text-sm mt-1">
+                      <CloudRain size={14} className="text-yellow-400" /> 18°C Partly Cloudy
+                    </div>
+                  </div>
+                </div>
+
+                {/* App Body */}
+                <div className="p-4 space-y-4 -mt-4 relative z-10 bg-gray-50 rounded-t-3xl">
+                  {/* Widget Row */}
+                  <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                    {[
+                      { icon: Map, color: 'blue', label: 'Map', sub: 'Explore' },
+                      { icon: Utensils, color: 'emerald', label: 'Food', sub: 'Nearby' },
+                      { icon: Bus, color: 'purple', label: 'Transit', sub: 'Routes' }
+                    ].map((item, idx) => (
+                      <div key={idx} className="min-w-[100px] bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+                        <div className={`w-8 h-8 bg-${item.color}-100 text-${item.color}-600 rounded-full flex items-center justify-center mb-2`}>
+                          <item.icon size={16} />
+                        </div>
+                        <p className="text-xs text-gray-500">{item.label}</p>
+                        <p className="font-bold text-sm text-gray-800">{item.sub}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Itinerary Card */}
+                  <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex justify-between items-center mb-3">
+                      <h4 className="font-bold text-gray-800">Today's Plan</h4>
+                      <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">Active</span>
+                    </div>
+                    <div className="space-y-3 relative pl-4 border-l-2 border-gray-200">
+                      <div className="relative">
+                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></div>
+                        <p className="text-xs text-gray-500">09:00 AM</p>
+                        <p className="text-sm font-semibold text-gray-800">Fushimi Inari Shrine</p>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-gray-300 border-2 border-white"></div>
+                        <p className="text-xs text-gray-500">12:30 PM</p>
+                        <p className="text-sm font-semibold text-gray-800">Lunch at Nishiki Market</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Alert Card */}
+                  <div className="bg-gray-900 text-white p-4 rounded-2xl shadow-lg flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                      <Bell size={16} className="text-yellow-400" />
+                    </div>
+                    <div>
+                      <h5 className="font-bold text-sm">Crowd Alert</h5>
+                      <p className="text-xs text-gray-300 mt-1">High traffic expected at Kinkaku-ji temple. Suggested alternate route available.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Floating Decorative Elements */}
+            <div className="absolute -bottom-10 -left-10 bg-white p-4 rounded-xl shadow-xl z-20 animate-bounce" style={{animationDuration: '3s'}}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                  <Check size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Flight Status</p>
+                  <p className="font-bold text-slate-800">On Time</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* 2️⃣ Stats Section */}
+      <section className="py-12 bg-white relative z-20 -mt-10 mx-4 lg:mx-auto max-w-7xl rounded-3xl shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05)] border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-100 px-8">
+          <div className="flex flex-col items-center text-center p-4 reveal">
+            <div className="text-4xl font-extrabold text-emerald-600 mb-2">120+</div>
+            <div className="text-gray-500 font-medium">Destinations Covered</div>
+            <div className="mt-2 text-sm text-gray-400">From Tokyo to Tulum</div>
+          </div>
+          <div className="flex flex-col items-center text-center p-4 reveal delay-100">
+            <div className="text-4xl font-extrabold text-emerald-600 mb-2">50K+</div>
+            <div className="text-gray-500 font-medium">Travelers Assisted</div>
+            <div className="mt-2 text-sm text-gray-400">Rating 4.9/5 stars</div>
+          </div>
+          <div className="flex flex-col items-center text-center p-4 reveal delay-200">
+            <div className="text-4xl font-extrabold text-emerald-600 mb-2">24/7</div>
+            <div className="text-gray-500 font-medium">AI-Powered Support</div>
+            <div className="mt-2 text-sm text-gray-400">Always there for you</div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3️⃣ Trusted By Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8">Trusted by global travel partners</p>
+          <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            {/* Generic Partner Logos */}
+            <div className="text-3xl font-bold text-gray-800 flex items-center gap-2 hover:text-blue-600 transition"><Home className="mb-1"/> Airbnb</div>
+            <div className="text-3xl font-bold text-gray-800 flex items-center gap-2 hover:text-sky-600 transition"><Plane className="mb-1"/> Expedia</div>
+            <div className="text-3xl font-bold text-gray-800 flex items-center gap-2 hover:text-orange-500 transition"><Map className="mb-1"/> Tripadvisor</div>
+            <div className="text-3xl font-bold text-gray-800 flex items-center gap-2 hover:text-blue-800 transition"><Check className="mb-1"/> Booking.com</div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4️⃣ Features Section */}
+      <section id="features" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 reveal">
+            <span className="text-emerald-600 font-bold uppercase tracking-wider text-sm">Features</span>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mt-2 mb-4">Plan, Explore, and Enjoy</h2>
+            <p className="text-lg text-gray-500">AccioVac combines advanced AI with local data to make your trip seamless.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: Wand2, title: 'AI Itinerary Builder', desc: 'Tell us your interests, budget, and dates. Our AI generates the perfect day-by-day plan instantly.', img: 'https://images.unsplash.com/photo-1517400508447-f8dd518b86db?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'emerald' },
+              { icon: Shield, title: 'Geofencing Alerts', desc: 'Stay safe with real-time notifications about neighborhood safety, scams, and emergency contacts.', img: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'red' },
+              { icon: CloudRain, title: 'Live Crowd & Weather', desc: 'Avoid the queues and the rain. Real-time updates help you pivot your plans on the fly.', img: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'blue' },
+              { icon: Calendar, title: 'Nearby Events', desc: 'Discover local festivals, pop-up markets, and concerts happening right now around you.', img: 'https://images.unsplash.com/photo-1533174072545-e8d4aa97edf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'purple' },
+              { icon: Lightbulb, title: 'Smart Suggestions', desc: 'Hungry? We recommend authentic spots based on your taste, not just tourist traps.', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'orange' },
+              { icon: Download, title: 'Offline Mode', desc: 'No data? No problem. Access your itineraries, maps, and saved spots completely offline.', img: 'https://images.unsplash.com/photo-1621252179027-94459d27d3ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', color: 'teal' }
+            ].map((feature, idx) => (
+              <div key={idx} className={`group bg-gray-50 rounded-3xl p-6 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 reveal ${idx % 3 === 1 ? 'delay-100' : idx % 3 === 2 ? 'delay-200' : ''}`}>
+                <div className={`w-12 h-12 bg-${feature.color}-100 text-${feature.color}-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>
+                  <feature.icon size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-500 mb-6">{feature.desc}</p>
+                <div className="h-40 rounded-xl bg-gray-200 overflow-hidden relative">
+                  <img src={feature.img} alt={feature.title} className="object-cover w-full h-full opacity-80 group-hover:scale-105 transition duration-700" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5️⃣ Services / Use Cases Section */}
+      <section id="services" className="py-20 bg-emerald-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12">Who is AccioVac for?</h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: 'Solo Traveler', desc: 'Safety first features and "meet locals" mode to make solo trips social.', img: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
+              { title: 'Families', desc: 'Kid-friendly filters and pace-adjusted itineraries for stress-free vacations.', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
+              { title: 'Backpackers', desc: 'Budget tracking, hostel finder, and off-the-beaten-path trails.', img: 'https://images.unsplash.com/photo-1505882662096-7c0a96996d91?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
+              { title: 'Business', desc: 'Receipt scanning, efficient routing, and leisure options for downtime.', img: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' }
+            ].map((card, idx) => (
+              <div key={idx} className="relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-2 transition duration-300 group">
+                <div className="h-48 overflow-hidden">
+                  <img src={card.img} alt={card.title} className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-lg font-bold mb-2">{card.title}</h3>
+                  <p className="text-sm text-gray-500 mb-4">{card.desc}</p>
+                  <a href="#" className="text-emerald-600 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                    View Details <ArrowRight size={14} />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6️⃣ Testimonials */}
+      <section id="reviews" className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gray-900 rounded-[3rem] p-8 md:p-16 relative overflow-hidden reveal">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-emerald-500 rounded-full blur-[100px] opacity-30"></div>
+            <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-500 rounded-full blur-[100px] opacity-20"></div>
+
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div className="order-2 md:order-1">
+                <div className="text-emerald-500 mb-6">
+                    {/* Quote Icon */}
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z" /></svg>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-medium text-white leading-relaxed mb-8">
+                  "AccioVac helped me navigate Tokyo like a local, even though I don't speak Japanese. The real-time train alerts saved my entire trip when the typhoon hit!"
+                </h3>
+                <div>
+                  <p className="text-lg font-bold text-white">Sarah Jenkins</p>
+                  <p className="text-emerald-400">Professional Travel Blogger</p>
+                </div>
+              </div>
+              <div className="order-1 md:order-2 flex justify-center">
+                <div className="relative w-64 h-80 md:w-80 md:h-96 rounded-2xl overflow-hidden border-4 border-white/10 shadow-2xl transform rotate-3">
+                  <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Testimonial" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7️⃣ Showcase / Interactive Map Graphic */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-12">Navigate the World with Confidence</h2>
+          
+          <div className="relative w-full h-[500px] rounded-3xl overflow-hidden shadow-2xl reveal">
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Map" className="w-full h-full object-cover brightness-75" />
+            
+            {/* Floating Pin 1 */}
+            <div className="absolute top-1/3 left-1/4 animate-float" style={{animationDelay: '0s'}}>
+              <div className="bg-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transform -translate-x-1/2">
+                <MapPin size={16} className="text-red-500" />
+                <div className="text-left">
+                  <p className="text-xs font-bold text-gray-800">Eiffel Tower</p>
+                  <p className="text-[10px] text-gray-500">1.2km • 15 min walk</p>
+                </div>
+              </div>
+              <div className="w-3 h-3 bg-white transform rotate-45 mx-auto -mt-1.5"></div>
+            </div>
+
+            {/* Floating Pin 2 */}
+            <div className="absolute bottom-1/3 right-1/4 animate-float" style={{animationDelay: '1.5s'}}>
+              <div className="bg-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transform -translate-x-1/2">
+                <Utensils size={16} className="text-emerald-500" />
+                <div className="text-left">
+                  <p className="text-xs font-bold text-gray-800">Le Jules Verne</p>
+                  <p className="text-[10px] text-gray-500">Resv: 7:00 PM</p>
+                </div>
+              </div>
+              <div className="w-3 h-3 bg-white transform rotate-45 mx-auto -mt-1.5"></div>
+            </div>
+
+             {/* Floating Pin 3 */}
+             <div className="absolute top-1/4 right-1/3 animate-float" style={{animationDelay: '0.5s'}}>
+              <div className="bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transform -translate-x-1/2">
+                <CloudRain size={16} className="text-blue-400" />
+                <div className="text-left">
+                  <p className="text-xs font-bold">Rain Starting</p>
+                  <p className="text-[10px] text-gray-400">In 10 mins</p>
+                </div>
+              </div>
+              <div className="w-3 h-3 bg-gray-900 transform rotate-45 mx-auto -mt-1.5"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8️⃣ CTA Section */}
+      <section id="download" className="py-20 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-emerald-900 to-black rounded-3xl p-10 md:p-20 text-center text-white shadow-2xl relative overflow-hidden reveal">
+            {/* Glow effects */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-10" style={{backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')"}}></div>
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500 rounded-full blur-[80px] opacity-40"></div>
+            
+            <h2 className="relative z-10 text-4xl md:text-5xl font-bold mb-6">Start your next adventure.</h2>
+            <p className="relative z-10 text-xl text-gray-300 mb-10 max-w-2xl mx-auto">Download AccioVac today and let AI handle the planning so you can focus on the memories.</p>
+            
+            <div className="relative z-10 flex flex-col sm:flex-row justify-center gap-4">
+              <button className="bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-emerald-50 transition transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                {/* Apple Icon */}
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.84 1.53-2.95 1.51-.14-1.15.36-2.35 1.05-3.2z"/></svg>
+                <div className="text-left leading-tight">
+                  <div className="text-xs font-normal">Download on the</div>
+                  <div>App Store</div>
+                </div>
+              </button>
+              <button className="bg-gray-800 border border-gray-700 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-700 transition transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                {/* Play Store Icon */}
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.36,10.79C20.36,10.79 19.95,10.42 19.95,10.42L15.39,13.7L19.95,16.97C19.95,16.97 20.36,16.6 20.36,16.6C21.21,16 21.21,14.04 20.36,13.21M16.81,8.88L14.54,11.15L6.05,2.66L16.81,8.88Z" /></svg>
+                <div className="text-left leading-tight">
+                  <div className="text-xs font-normal">GET IT ON</div>
+                  <div>Google Play</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9️⃣ Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-16 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div className="col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 mb-4 text-white">
+                <Send className="text-emerald-500" />
+                <span className="font-bold text-xl">AccioVac</span>
+              </div>
+              <p className="text-sm leading-relaxed mb-6">Your smart companion for seamless travel experiences worldwide.</p>
+              <div className="flex space-x-4">
+                <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition"><Twitter size={18} /></a>
+                <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition"><Instagram size={18} /></a>
+                <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition"><Linkedin size={18} /></a>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-bold mb-4">Product</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-emerald-400 transition">Features</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Pricing</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Itinerary AI</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Safety Alerts</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-bold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-emerald-400 transition">About Us</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Careers</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Blog</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Contact</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-bold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-emerald-400 transition">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-emerald-400 transition">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
+            <p>&copy; 2025 AccioVac Inc. All rights reserved.</p>
+            <div className="flex items-center gap-2 mt-4 md:mt-0">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              <span>Systems Operational</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
