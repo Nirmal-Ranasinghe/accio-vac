@@ -681,7 +681,7 @@ export default function AccioVacLanding() {
           </div>
           
           <div className="border-t border-gray-800 dark:border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
-            <p>&copy; 2025 AccioVac Inc. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} AccioVac. All rights reserved.</p>
             <div className="flex items-center gap-2 mt-4 md:mt-0">
               <span className="w-2 h-2 rounded-full bg-green-500"></span>
               <span>Systems Operational</span>
