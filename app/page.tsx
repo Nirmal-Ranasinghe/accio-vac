@@ -1,282 +1,19 @@
-'use client';
-
-import React, { useState, useEffect, useRef, use } from 'react';
+import React from 'react';
 import { 
-  Send, Menu, X, ArrowRight, PlayCircle, Map, Utensils, 
+  Send, ArrowRight, PlayCircle, Map, Utensils, 
   Bus, Bell, Check, Wand2, Shield, CloudRain, 
   Calendar, Lightbulb, Download, Twitter, Instagram, Linkedin,
-  Plane, Home, MapPin, Navigation, Sun, Moon, Monitor
+  Plane, Home, MapPin
 } from 'lucide-react';
-
-// Data for the Map Carousel
-const carouselData = [
-  {
-    id: 'paris',
-    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80', // Eiffel Tower
-    location: 'Paris, France',
-    widgets: [
-      { icon: MapPin, color: 'red', label: 'Eiffel Tower', sub: '1.2km • 15 min walk', position: 'top-1/3 left-1/4', delay: '0s' },
-      { icon: Utensils, color: 'emerald', label: 'Le Jules Verne', sub: 'Resv: 7:00 PM', position: 'bottom-1/3 right-1/4', delay: '1.5s' },
-      { icon: CloudRain, color: 'blue', label: 'Rain Starting', sub: 'In 10 mins', isDark: true, position: 'top-1/4 right-1/3', delay: '0.5s' }
-    ]
-  },
-  {
-    id: 'srilanka',
-    image: 'https://images.unsplash.com/photo-1711100358916-c3a93c7a47e2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Sigiriya Rock Fortress
-    location: 'Sigiriya, Sri Lanka',
-    widgets: [
-      { icon: MapPin, color: 'orange', label: 'Sigiriya Rock', sub: 'Open • Closing 5 PM', position: 'top-1/4 left-1/3', delay: '0s' },
-      { icon: Utensils, color: 'emerald', label: 'Local Kottu Spot', sub: 'Highly Rated', position: 'bottom-1/4 right-1/3', delay: '1.2s' },
-      { icon: Bell, color: 'yellow', label: 'Elephant Safari', sub: 'Departing 3:00 PM', isDark: true, position: 'top-1/2 right-1/4', delay: '0.6s' }
-    ]
-  },
-  {
-    id: 'kyoto',
-    image: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80', // Kyoto
-    location: 'Kyoto, Japan',
-    widgets: [
-      { icon: MapPin, color: 'red', label: 'Fushimi Inari', sub: 'Crowded • Go Early', position: 'top-1/3 left-1/4', delay: '0s' },
-      { icon: Utensils, color: 'emerald', label: 'Gogyo Ramen', sub: 'Wait: 20 mins', position: 'bottom-1/4 right-1/4', delay: '1s' },
-      { icon: Wand2, color: 'purple', label: 'Geisha District', sub: 'Walking Tour', isDark: true, position: 'top-1/4 right-1/3', delay: '0.5s' }
-    ]
-  }
-];
+import Navbar from './components/Navbar';
+import MapCarousel from './components/MapCarousel';
+import ScrollObserver from './components/ScrollObserver';
 
 export default function AccioVacLanding() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  
-  // Theme State: 'light' | 'dark' | 'system'
-  const [theme, setTheme] = useState('system');
-  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false);
-
-  // Handle Theme Change
-  useEffect(() => {
-    const root = window.document.documentElement;
-    const removeOldTheme = () => {
-      root.classList.remove('dark');
-      root.classList.remove('light');
-    };
-
-    const applyTheme = (t: string) => {
-      removeOldTheme();
-      if (t === 'dark') {
-        root.classList.add('dark');
-      } else if (t === 'light') {
-        root.classList.add('light'); // Optional, mainly 'dark' class toggles Tailwind
-      } else if (t === 'system') {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          root.classList.add('dark');
-        }
-      }
-    };
-
-    applyTheme(theme);
-    
-    // System listener
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemChange = (e: MediaQueryListEvent) => {
-      if (theme === 'system') {
-        removeOldTheme();
-        if (e.matches) root.classList.add('dark');
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleSystemChange);
-    return () => mediaQuery.removeEventListener('change', handleSystemChange);
-
-  }, [theme]);
-
-  // Handle Scroll Effect for Navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Handle Reveal Animation on Scroll
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-
-    const revealElements = document.querySelectorAll('.reveal');
-    revealElements.forEach(el => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Carousel Auto-Rotation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselData.length);
-    }, 5000); // Change slide every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="bg-gray-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased overflow-x-hidden scroll-smooth transition-colors duration-300">
-      <style>{`
-        .reveal {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal.active {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-          100% { transform: translateY(0px); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
-      {/* Navbar */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled || isMobileMenuOpen 
-        ? 'h-auto shadow-md bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-white/30 dark:border-slate-800' 
-        : 'h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-white/30 dark:border-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer z-50">
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-800 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
-                <Send size={16} />
-              </div>
-              <span className="font-bold text-2xl tracking-tight text-emerald-900 dark:text-emerald-400">Accio<span className="text-emerald-500">Vac</span></span>
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors">Features</a>
-              <a href="#services" className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors">Use Cases</a>
-              <a href="#reviews" className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors">Reviews</a>
-              
-              {/* Theme Toggle Dropdown */}
-              <div className="relative">
-                <button 
-                  onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors focus:outline-none"
-                >
-                  {theme === 'light' && <Sun size={20} />}
-                  {theme === 'dark' && <Moon size={20} />}
-                  {theme === 'system' && <Monitor size={20} />}
-                </button>
-                
-                {isThemeDropdownOpen && (
-                  <div className="absolute top-full mt-2 right-0 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 py-1 overflow-hidden z-50">
-                    {[
-                      { id: 'light', icon: Sun, label: 'Light' },
-                      { id: 'dark', icon: Moon, label: 'Dark' },
-                      { id: 'system', icon: Monitor, label: 'System' }
-                    ].map((mode) => (
-                      <button
-                        key={mode.id}
-                        onClick={() => { setTheme(mode.id); setIsThemeDropdownOpen(false); }}
-                        className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors ${theme === mode.id ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-slate-700/50' : 'text-slate-600 dark:text-slate-300'}`}
-                      >
-                        <mode.icon size={14} />
-                        {mode.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <a href="#download" className="bg-emerald-900 dark:bg-emerald-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-emerald-800 dark:hover:bg-emerald-500 hover:shadow-lg transition transform hover:-translate-y-0.5">
-                Get Started
-              </a>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-4 z-50">
-              {/* Theme Toggle (Mobile) */}
-               <button 
-                  onClick={() => {
-                    if(theme === 'light') setTheme('dark');
-                    else if(theme === 'dark') setTheme('system');
-                    else setTheme('light');
-                  }}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
-                >
-                  {theme === 'light' && <Sun size={24} />}
-                  {theme === 'dark' && <Moon size={24} />}
-                  {theme === 'system' && <Monitor size={24} />}
-                </button>
-
-              <button 
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 focus:outline-none transition-colors"
-              >
-                {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu Dropdown */}
-        <div className={`md:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800 shadow-xl transition-all duration-300 ease-in-out origin-top ${isMobileMenuOpen ? 'opacity-100 scale-y-100 translate-y-0' : 'opacity-0 scale-y-0 -translate-y-5 pointer-events-none'}`}>
-          <div className="px-4 py-6 space-y-4 flex flex-col items-center">
-            <a 
-              href="#features" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-lg font-medium text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 w-full text-center border-b border-gray-100 dark:border-slate-800"
-            >
-              Features
-            </a>
-            <a 
-              href="#services" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-lg font-medium text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 w-full text-center border-b border-gray-100 dark:border-slate-800"
-            >
-              Use Cases
-            </a>
-            <a 
-              href="#reviews" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-lg font-medium text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 w-full text-center border-b border-gray-100 dark:border-slate-800"
-            >
-              Reviews
-            </a>
-            <a 
-              href="#download" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="bg-emerald-600 text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-emerald-700 shadow-lg w-full text-center mt-2"
-            >
-              Get Started
-            </a>
-          </div>
-        </div>
-      </nav>
+      <ScrollObserver />
+      <Navbar />
 
       {/* 1️⃣ Hero Section */}
       <header className="relative w-full min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-gray-900">
@@ -551,52 +288,7 @@ export default function AccioVacLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-12 dark:text-white">Navigate the World with Confidence</h2>
           
-          <div className="relative w-full h-[500px] rounded-3xl overflow-hidden shadow-2xl reveal group border border-transparent dark:border-slate-800">
-            {/* Carousel Slides */}
-            {carouselData.map((slide, index) => (
-              <div 
-                key={slide.id}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-              >
-                <img src={slide.image} alt={slide.location} className="w-full h-full object-cover brightness-75 dark:brightness-50" />
-                
-                {/* Location Label */}
-                <div className="absolute bottom-6 left-6 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full flex items-center gap-2">
-                  <MapPin size={16} className="text-emerald-400" />
-                  <span className="text-sm font-medium">{slide.location}</span>
-                </div>
-
-                {/* Floating Widgets for this Slide */}
-                {slide.widgets.map((widget, wIdx) => (
-                  <div 
-                    key={wIdx}
-                    className={`absolute ${widget.position} animate-float ${index === currentSlide ? 'opacity-100' : 'opacity-0'} transition-opacity duration-700`} 
-                    style={{animationDelay: widget.delay, transitionDelay: `${wIdx * 200}ms`}}
-                  >
-                    <div className={`${widget.isDark ? 'bg-gray-900 text-white dark:border dark:border-slate-700' : 'bg-white text-gray-800 dark:bg-slate-800 dark:text-gray-100'} px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transform -translate-x-1/2`}>
-                      <widget.icon size={16} className={`text-${widget.color}-500`} />
-                      <div className="text-left">
-                        <p className="text-xs font-bold">{widget.label}</p>
-                        <p className={`text-[10px] ${widget.isDark ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}>{widget.sub}</p>
-                      </div>
-                    </div>
-                    <div className={`w-3 h-3 ${widget.isDark ? 'bg-gray-900' : 'bg-white dark:bg-slate-800'} transform rotate-45 mx-auto -mt-1.5`}></div>
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            {/* Carousel Indicators */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-              {carouselData.map((_, index) => (
-                <button 
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'}`}
-                />
-              ))}
-            </div>
-          </div>
+          <MapCarousel />
         </div>
       </section>
 
@@ -681,7 +373,7 @@ export default function AccioVacLanding() {
           </div>
           
           <div className="border-t border-gray-800 dark:border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
-            <p>&copy; {new Date().getFullYear()} AccioVac. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} AccioVac Inc. All rights reserved.</p>
             <div className="flex items-center gap-2 mt-4 md:mt-0">
               <span className="w-2 h-2 rounded-full bg-green-500"></span>
               <span>Systems Operational</span>
