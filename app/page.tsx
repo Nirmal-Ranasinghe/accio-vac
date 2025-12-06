@@ -8,6 +8,7 @@ import {
 import Navbar from './components/Navbar';
 import MapCarousel from './components/MapCarousel';
 import ScrollObserver from './components/ScrollObserver';
+import packageInfo from '../package.json';
 
 export default function AccioVacLanding() {
   return (
@@ -373,7 +374,7 @@ export default function AccioVacLanding() {
           </div>
           
           <div className="border-t border-gray-800 dark:border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
-            <p>&copy; {new Date().getFullYear()} AccioVac Inc. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} AccioVac Inc. All rights reserved. <span className="opacity-50 ml-2">v{packageInfo.version}</span></p>
             <div className="flex items-center gap-2 mt-4 md:mt-0">
               <span className="w-2 h-2 rounded-full bg-green-500"></span>
               <span>Systems Operational</span>
